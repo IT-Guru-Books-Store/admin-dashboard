@@ -17,6 +17,8 @@ import React, { useState } from "react";
 import { loginUser } from "@/services/userService";
 import { USER_STATES } from "@/constants/constant";
 import { addAuthenticationTokens } from "@/utils/authUtils";
+import { useDispatch } from "react-redux";
+import { loginUserAction } from "@/redux/slices/authSlice";
 
 const LoginCard = () => {
   const router = useRouter();
@@ -26,6 +28,7 @@ const LoginCard = () => {
   const [userState, setUserState] = useState(USER_STATES.NOT_LOGGED_IN);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
 
   const handleLogIn = async (e) => {
     e.preventDefault();
@@ -36,7 +39,12 @@ const LoginCard = () => {
       const data = await loginUser(email, password);
       const { user, _tokenResponse, userRole } = data;
       addAuthenticationTokens(user, _tokenResponse, userRole);
-
+      const formattedUser = {
+        role: userRole,
+        userId: user.uid,
+        email: user.email,
+      };
+      dispatch(loginUserAction(formattedUser));
       setUserState(USER_STATES.LOGGED_IN);
       router.push("/dashboard");
     } catch (error) {
