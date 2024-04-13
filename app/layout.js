@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/material_tailwind_components/MaterialTailwindComponents";
+import Providers from "@/redux/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,9 +13,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ThemeProvider>
-        <body className={inter.className}>{children}</body>
-      </ThemeProvider>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
